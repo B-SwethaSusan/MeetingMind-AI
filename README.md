@@ -1,4 +1,4 @@
-# Meeting Transcript AI
+# MeetingMind-AI
 
 An AI-powered meeting assistant that turns raw meeting transcripts into structured insights — meeting date, department, action items (with deadlines and priority) and per-speaker contribution percentages — and lets you chat with the transcript afterwards.
 
