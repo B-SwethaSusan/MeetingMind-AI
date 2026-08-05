@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Meeting Transcript AI
 
 An AI-powered meeting assistant that turns raw meeting transcripts into structured insights — meeting date, department, action items (with deadlines and priority) and per-speaker contribution percentages — and lets you chat with the transcript afterwards.
@@ -230,4 +229,4 @@ recall, F1, and exact-case accuracy. The dataset is in
 when adding new cases.
 =======
 
->>>>>>> 01aef93996fe14152f83bc4352795660ebc4cd86
+
