@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meeting Transcript AI</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --panel-2: #273449;
+      --border: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #818cf8;
+      --high: #f87171;
+      --medium: #fbbf24;
+      --low: #4ade80;
+      --chip: #0ea5e9;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 24px 32px;
+      background: linear-gradient(90deg, #1e3a8a, #4c1d95);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    header .badge {
+      background: rgba(255,255,255,0.15);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #e0e7ff;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 24px 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .tab {
+      flex: 1;
+      padding: 8px 10px;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .tab.active {
+      background: var(--accent);
+      color: #0f172a;
+      font-weight: 600;
+      border-color: var(--accent);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      background: #0b1220;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: ui-monospace, "Cascadia Code", Menlo, monospace;
+      font-size: 13px;
+      resize: vertical;
+    }
+
+    input[type=file] {
+      width: 100%;
+      padding: 10px;
+      background: #0b1220;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+    }
+
+    button {
+      background: var(--accent);
+      color: #0f172a;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: transform 0.05s ease;
+    }
+    button:hover { background: #7dd3fc; }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .actions .ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .actions .ghost:hover { color: var(--text); border-color: var(--accent); }
+
+    .status {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .status.error { color: #f87171; }
+    .status.ok { color: #4ade80; }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .summary-tile {
+      background: var(--panel-2);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .summary-tile .label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .summary-tile .value {
+      font-size: 15px;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .tasks { display: flex; flex-direction: column; gap: 8px; }
+    .task {
+      background: var(--panel-2);
+      border-left: 3px solid var(--accent-2);
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .task .who {
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .task .what { margin-top: 2px; font-size: 14px; }
+    .task .meta {
+      margin-top: 6px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-size: 11px;
+    }
+    .chip {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+    .priority-High   { color: var(--high); border-color: var(--high); }
+    .priority-Medium { color: var(--medium); border-color: var(--medium); }
+    .priority-Low    { color: var(--low); border-color: var(--low); }
+
+    .speakers { display: flex; flex-direction: column; gap: 6px; }
+    .speaker-row {
+      display: grid;
+      grid-template-columns: 110px 1fr 40px;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .bar {
+      background: var(--panel-2);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .bar > div {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+    .pct { text-align: right; color: var(--muted); }
+
+    .chat-window {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      max-height: 240px;
+      overflow-y: auto;
+      font-size: 13px;
+    }
+    .chat-msg { margin: 6px 0; }
+    .chat-msg.user { color: var(--accent); }
+    .chat-msg.assistant { color: var(--text); }
+    .chat-empty { color: var(--muted); font-style: italic; }
+
+    .chat-input {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .chat-input input {
+      flex: 1;
+      background: #0b1220;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .full { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🤖 Meeting Transcript AI</h1>
+    <span class="badge">v2.0 · FastAPI · Ollama</span>
+  </header>
+
+  <div class="container">
+    <!-- LEFT: input + analyze -->
+    <section class="card">
+      <h2>📄 Meeting Input</h2>
+      <div class="tabs">
+        <div class="tab active" data-tab="paste">Paste Text</div>
+        <div class="tab" data-tab="upload">Upload .txt</div>
+      </div>
+
+      <div id="pane-paste">
+        <textarea id="transcript" placeholder="Paste your meeting transcript here..."></textarea>
+      </div>
+      <div id="pane-upload" style="display:none">
+        <input type="file" id="file" accept=".txt" />
+      </div>
+
+      <div class="actions">
+        <button id="analyzeBtn">Analyze Meeting</button>
+        <button class="ghost" id="loadSample">Load Sample</button>
+        <button class="ghost" id="clearBtn">Clear</button>
+      </div>
+      <div class="status" id="status"></div>
+    </section>
+
+    <!-- RIGHT: analysis result -->
+    <section class="card">
+      <h2>📊 Analysis Result</h2>
+      <div id="result">
+        <div class="chat-empty">Run an analysis to see the result here.</div>
+      </div>
+    </section>
+
+    <!-- FULL WIDTH: chat -->
+    <section class="card full">
+      <h2>💬 Chat About This Meeting</h2>
+      <div class="chat-window" id="chatWindow">
+        <div class="chat-empty">Ask follow-up questions about the latest analyzed transcript.</div>
+      </div>
+      <div class="chat-input">
+        <input id="chatInput" type="text" placeholder="e.g. Who is responsible for QA?" />
+        <button id="chatBtn">Send</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const API_BASE = "";  // same origin
+    const $ = (id) => document.getElementById(id);
+
+    // Tab switching
+    document.querySelectorAll(".tab").forEach((t) => {
+      t.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+        t.classList.add("active");
+        const which = t.dataset.tab;
+        $("pane-paste").style.display  = which === "paste"  ? "" : "none";
+        $("pane-upload").style.display = which === "upload" ? "" : "none";
+      });
+    });
+
+    $("loadSample").onclick = () => {
+      $("transcript").value = `Meeting Date: 12 August 2026
+Department: AI Platform Engineering
+
+Participants:
+Alice (Engineering Manager)
+Bob (Backend Engineer)
+Charlie (QA Lead)
+David (DevOps Engineer)
+Eva (Product Manager)
+Frank (Data Engineer)
+
+Alice:
+Good morning everyone. We need to finish the Meeting Transcript Agent before the client demo next Thursday. Eva, can you briefly summarize today's agenda?
+
+Eva:
+Sure. We'll review API progress, deployment readiness, testing status, and discuss documentation.
+
+Bob:
+The transcript analysis API is complete. The chat endpoint is about 80% finished. I can complete it by tomorrow evening.
+
+Alice:
+Excellent. Bob, once you're done, please create API documentation by Monday.
+
+Charlie:
+Testing has started. We've completed unit testing. Integration testing will begin on Friday.
+
+David:
+SSL certificates are still pending from the infrastructure team. I expect them by Friday morning.
+
+Alice:
+David, deploy the latest backend to staging immediately after the certificates arrive.
+
+Frank:
+I will prepare system performance graphs before Wednesday evening.`;
+    };
+
+    $("clearBtn").onclick = () => {
+      $("transcript").value = "";
+      $("file").value = "";
+      $("result").innerHTML = '<div class="chat-empty">Run an analysis to see the result here.</div>';
+      $("status").textContent = "";
+      $("chatWindow").innerHTML = '<div class="chat-empty">Ask follow-up questions about the latest analyzed transcript.</div>';
+    };
+
+    function setStatus(msg, kind = "") {
+      const s = $("status");
+      s.textContent = msg;
+      s.className = "status " + kind;
+    }
+
+    async function analyze() {
+      setStatus("Analyzing... this may take a moment.");
+      $("analyzeBtn").disabled = true;
+      try {
+        let resp;
+        const useFile = document.querySelector(".tab.active").dataset.tab === "upload";
+        if (useFile) {
+          const f = $("file").files[0];
+          if (!f) { setStatus("Please choose a .txt file first.", "error"); return; }
+          const form = new FormData();
+          form.append("file", f);
+          resp = await fetch(API_BASE + "/meeting/upload", { method: "POST", body: form });
+        } else {
+          const text = $("transcript").value.trim();
+          if (!text) { setStatus("Please paste a transcript first.", "error"); return; }
+          resp = await fetch(API_BASE + "/meeting/analyze", {
+            method: "POST",
+            headers: { "Content-Type": "text/plain" },
+            body: text,
+          });
+        }
+        if (!resp.ok) {
+          const err = await resp.text();
+          setStatus("Error: " + err, "error");
+          return;
+        }
+        const data = await resp.json();
+        renderResult(data);
+        setStatus("Analysis complete ✓", "ok");
+        $("chatWindow").innerHTML = '<div class="chat-empty">Ask follow-up questions about the latest analyzed transcript.</div>';
+      } catch (e) {
+        setStatus("Error: " + e.message, "error");
+      } finally {
+        $("analyzeBtn").disabled = false;
+      }
+    }
+
+    $("analyzeBtn").onclick = analyze;
+
+    function renderResult(d) {
+      const stats = d.speaker_statistics || [];
+      const totalPct = stats.reduce((s, x) => s + (x.percentage || 0), 0);
+      const max = stats.reduce((m, x) => Math.max(m, x.percentage || 0), 1);
+
+      const tasksHtml = (d.tasks || []).map((t) => `
+        <div class="task">
+          <div class="who">${escapeHtml(t.name)}</div>
+          <div class="what">${escapeHtml(t.task)}</div>
+          <div class="meta">
+            <span class="chip">📅 ${escapeHtml(t.deadline || "Not Mentioned")}</span>
+            <span class="chip priority-${escapeHtml(t.priority || "Medium")}">🔥 ${escapeHtml(t.priority || "Medium")}</span>
+          </div>
+        </div>
+      `).join("") || '<div class="chat-empty">No action items detected.</div>';
+
+      const speakersHtml = stats.length
+        ? stats.map((s) => `
+          <div class="speaker-row">
+            <div>${escapeHtml(s.name)}</div>
+            <div class="bar"><div style="width:${(s.percentage / max) * 100}%"></div></div>
+            <div class="pct">${s.percentage}%</div>
+          </div>`).join("")
+        + `<div class="status" style="margin-top:6px">Total: ${totalPct}%</div>`
+        : '<div class="chat-empty">No speakers detected in transcript.</div>';
+
+      $("result").innerHTML = `
+        <div class="summary-grid">
+          <div class="summary-tile">
+            <div class="label">Meeting Date</div>
+            <div class="value">${escapeHtml(d.meeting_date || "Not Mentioned")}</div>
+          </div>
+          <div class="summary-tile">
+            <div class="label">Department</div>
+            <div class="value">${escapeHtml(d.department || "Not Mentioned")}</div>
+          </div>
+        </div>
+
+        <div class="label" style="color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.05em; margin: 14px 0 6px;">
+          ✅ Action Items
+        </div>
+        <div class="tasks">${tasksHtml}</div>
+
+        <div class="label" style="color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.05em; margin: 14px 0 6px;">
+          📊 Speaker Contribution
+        </div>
+        <div class="speakers">${speakersHtml}</div>
+      `;
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+      }[c]));
+    }
+
+    // ---- chat ----
+    async function sendChat() {
+      const q = $("chatInput").value.trim();
+      if (!q) return;
+      appendChat("user", q);
+      $("chatInput").value = "";
+      $("chatBtn").disabled = true;
+      try {
+        const resp = await fetch(API_BASE + "/chat", {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: q,
+        });
+        const data = await resp.json();
+        appendChat("assistant", data.answer || "(no answer)");
+      } catch (e) {
+        appendChat("assistant", "Error: " + e.message);
+      } finally {
+        $("chatBtn").disabled = false;
+      }
+    }
+    $("chatBtn").onclick = sendChat;
+    $("chatInput").addEventListener("keydown", (e) => { if (e.key === "Enter") sendChat(); });
+
+    function appendChat(role, text) {
+      const w = $("chatWindow");
+      if (w.querySelector(".chat-empty")) w.innerHTML = "";
+      const div = document.createElement("div");
+      div.className = "chat-msg " + role;
+      div.textContent = (role === "user" ? "You: " : "AI: ") + text;
+      w.appendChild(div);
+      w.scrollTop = w.scrollHeight;
+    }
+  </script>
+</body>
+</html>

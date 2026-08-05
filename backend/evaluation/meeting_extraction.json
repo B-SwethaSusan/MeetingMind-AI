@@ -1,0 +1,152 @@
+[
+  {
+    "id": "header_single_task",
+    "transcript": "Meeting Date: 12 August 2026\nDepartment: Engineering\n\nAlice: Bob, prepare the API documentation by Friday. This is high priority.\nBob: I will complete the API documentation by Friday.",
+    "expected": {"meeting_date": "12 August 2026", "department": "Engineering", "action_items": [{"assignee": "Bob", "task": "prepare the API documentation", "deadline": "Friday", "priority": "High"}]}
+  },
+  {
+    "id": "multiple_owners",
+    "transcript": "Meeting Date: 2026-09-03\nTeam: Product\n\nMaya: Priya, update the onboarding flow by next Wednesday; it is medium priority.\nMaya: Daniel, review the pricing copy before Tuesday. That is low priority.",
+    "expected": {"meeting_date": "2026-09-03", "department": "Product", "action_items": [{"assignee": "Priya", "task": "update the onboarding flow", "deadline": "next Wednesday", "priority": "Medium"}, {"assignee": "Daniel", "task": "review the pricing copy", "deadline": "Tuesday", "priority": "Low"}]}
+  },
+  {
+    "id": "no_date_or_department",
+    "transcript": "Nora: Leo, send the revised contract tomorrow. It is high priority.\nLeo: Understood.",
+    "expected": {"meeting_date": "Not Mentioned", "department": "Not Mentioned", "action_items": [{"assignee": "Leo", "task": "send the revised contract", "deadline": "tomorrow", "priority": "High"}]}
+  },
+  {
+    "id": "explicit_date_deadline",
+    "transcript": "Meeting Date: October 4, 2026\nDivision: Finance\n\nAva: Omar, reconcile the September invoices by 15/10/2026. This is medium priority.",
+    "expected": {"meeting_date": "October 4, 2026", "department": "Finance", "action_items": [{"assignee": "Omar", "task": "reconcile the September invoices", "deadline": "15/10/2026", "priority": "Medium"}]}
+  },
+  {
+    "id": "two_tasks_one_person",
+    "transcript": "Meeting Date: 7 November 2026\nDepartment: Operations\n\nKim: Rohan, arrange the vendor demo by Monday. High priority. Also prepare the risk register this week; medium priority.\nRohan: I will handle both items.",
+    "expected": {"meeting_date": "7 November 2026", "department": "Operations", "action_items": [{"assignee": "Rohan", "task": "arrange the vendor demo", "deadline": "Monday", "priority": "High"}, {"assignee": "Rohan", "task": "prepare the risk register", "deadline": "this week", "priority": "Medium"}]}
+  },
+  {
+    "id": "role_and_timestamp",
+    "transcript": "Meeting Date: 21/11/2026\nDepartment: Security\n\n[09:00] Elena (Lead): Marcus, rotate the staging credentials by end of day. This is high priority.\n[09:05] Marcus: I will rotate them today.",
+    "expected": {"meeting_date": "21/11/2026", "department": "Security", "action_items": [{"assignee": "Marcus", "task": "rotate the staging credentials", "deadline": "end of day", "priority": "High"}]}
+  },
+  {
+    "id": "no_action_items",
+    "transcript": "Meeting Date: 1 December 2026\nDepartment: Research\n\nIris: We reviewed the completed experiment and discussed the results.\nNoah: The team agreed the results are ready to present.",
+    "expected": {"meeting_date": "1 December 2026", "department": "Research", "action_items": []}
+  },
+  {
+    "id": "deadline_not_mentioned",
+    "transcript": "Meeting Date: 9 December 2026\nTeam: Customer Success\n\nSofia: Ethan, draft a reply template for enterprise customers. This is low priority.\nEthan: I will start on it.",
+    "expected": {"meeting_date": "9 December 2026", "department": "Customer Success", "action_items": [{"assignee": "Ethan", "task": "draft a reply template for enterprise customers", "deadline": "Not Mentioned", "priority": "Low"}]}
+  },
+  {
+    "id": "name_with_hyphen",
+    "transcript": "Meeting Date: 2026-12-15\nDepartment: Data Platform\n\nJean-Pierre: Mei, validate the pipeline backfill before Thursday afternoon. It is medium priority.\nMei: I will validate it.",
+    "expected": {"meeting_date": "2026-12-15", "department": "Data Platform", "action_items": [{"assignee": "Mei", "task": "validate the pipeline backfill", "deadline": "Thursday afternoon", "priority": "Medium"}]}
+  },
+  {
+    "id": "date_and_department_fallback",
+    "transcript": "The Platform department met on 18 January 2027.\n\nGrace: Theo, publish the deployment checklist by Friday. This is high priority.",
+    "expected": {"meeting_date": "18 January 2027", "department": "Not Mentioned", "action_items": [{"assignee": "Theo", "task": "publish the deployment checklist", "deadline": "Friday", "priority": "High"}]}
+  },
+  {
+    "id": "standalone_speaker_lines",
+    "transcript": "Meeting Date: 2 February 2027\nDepartment: Legal\n\nHarper:\nLina, prepare the compliance summary by Thursday. This is high priority.\nLina:\nI will prepare it.",
+    "expected": {"meeting_date": "2 February 2027", "department": "Legal", "action_items": [{"assignee": "Lina", "task": "prepare the compliance summary", "deadline": "Thursday", "priority": "High"}]}
+  },
+  {
+    "id": "three_independent_tasks",
+    "transcript": "Meeting Date: 2027-02-10\nDepartment: Marketing\n\nAmir: Chloe, finalize the campaign brief by Tuesday. Medium priority.\nAmir: Ben, schedule the customer interviews this week. High priority.\nAmir: Zoe, archive the old creative files by Friday. Low priority.",
+    "expected": {"meeting_date": "2027-02-10", "department": "Marketing", "action_items": [{"assignee": "Chloe", "task": "finalize the campaign brief", "deadline": "Tuesday", "priority": "Medium"}, {"assignee": "Ben", "task": "schedule the customer interviews", "deadline": "this week", "priority": "High"}, {"assignee": "Zoe", "task": "archive the old creative files", "deadline": "Friday", "priority": "Low"}]}
+  },
+  {
+    "id": "assigned_by_self",
+    "transcript": "Meeting Date: 14 February 2027\nTeam: Infrastructure\n\nVictor: I will replace the expired SSL certificate before Monday. This is high priority.",
+    "expected": {"meeting_date": "14 February 2027", "department": "Infrastructure", "action_items": [{"assignee": "Victor", "task": "replace the expired SSL certificate", "deadline": "Monday", "priority": "High"}]}
+  },
+  {
+    "id": "eod_deadline",
+    "transcript": "Meeting Date: 2027-02-18\nDepartment: Support\n\nOlivia: Sam, respond to the escalation queue by EOD. This is medium priority.",
+    "expected": {"meeting_date": "2027-02-18", "department": "Support", "action_items": [{"assignee": "Sam", "task": "respond to the escalation queue", "deadline": "EOD", "priority": "Medium"}]}
+  },
+  {
+    "id": "department_with_ampersand",
+    "transcript": "Meeting Date: 22 February 2027\nDepartment: People & Culture\n\nTara: Miles, publish the benefits FAQ by next Monday. Low priority.",
+    "expected": {"meeting_date": "22 February 2027", "department": "People & Culture", "action_items": [{"assignee": "Miles", "task": "publish the benefits FAQ", "deadline": "next Monday", "priority": "Low"}]}
+  },
+  {
+    "id": "discussion_not_assignment",
+    "transcript": "Meeting Date: 26 February 2027\nDepartment: Design\n\nUma: We discussed the new navigation and reviewed the prototype.\nCal: The current prototype already meets the accessibility target.",
+    "expected": {"meeting_date": "26 February 2027", "department": "Design", "action_items": []}
+  },
+  {
+    "id": "numeric_date_and_two_priorities",
+    "transcript": "Meeting Date: 03/03/2027\nDivision: Sales\n\nJan: Pia, update the renewal forecast by 10/03/2027. High priority.\nJan: Arjun, clean the duplicate leads by 10/03/2027. Low priority.",
+    "expected": {"meeting_date": "03/03/2027", "department": "Sales", "action_items": [{"assignee": "Pia", "task": "update the renewal forecast", "deadline": "10/03/2027", "priority": "High"}, {"assignee": "Arjun", "task": "clean the duplicate leads", "deadline": "10/03/2027", "priority": "Low"}]}
+  },
+  {
+    "id": "friday_morning",
+    "transcript": "Meeting Date: 8 March 2027\nDepartment: Quality Assurance\n\nRita: Dev, complete the regression checklist by Friday morning. It is high priority.",
+    "expected": {"meeting_date": "8 March 2027", "department": "Quality Assurance", "action_items": [{"assignee": "Dev", "task": "complete the regression checklist", "deadline": "Friday morning", "priority": "High"}]}
+  },
+  {
+    "id": "task_without_deadline",
+    "transcript": "Meeting Date: 2027-03-12\nDepartment: Analytics\n\nQuinn: Elsa, document the churn model assumptions. Medium priority.\nElsa: I will add the documentation.",
+    "expected": {"meeting_date": "2027-03-12", "department": "Analytics", "action_items": [{"assignee": "Elsa", "task": "document the churn model assumptions", "deadline": "Not Mentioned", "priority": "Medium"}]}
+  },
+  {
+    "id": "department_missing",
+    "transcript": "Meeting Date: 16 March 2027\n\nIvan: Nia, confirm the venue booking by tomorrow. This is low priority.",
+    "expected": {"meeting_date": "16 March 2027", "department": "Not Mentioned", "action_items": [{"assignee": "Nia", "task": "confirm the venue booking", "deadline": "tomorrow", "priority": "Low"}]}
+  },
+  {
+    "id": "longer_transcript",
+    "transcript": "Meeting Date: March 19, 2027\nDepartment: Procurement\n\nDana: The supplier review is complete and the pricing looks acceptable.\nDana: Yusuf, obtain the signed order form by Friday. This is high priority.\nYusuf: I will contact the supplier today.\nDana: Afterwards, Mae, update the purchase tracker next week. Medium priority.",
+    "expected": {"meeting_date": "March 19, 2027", "department": "Procurement", "action_items": [{"assignee": "Yusuf", "task": "obtain the signed order form", "deadline": "Friday", "priority": "High"}, {"assignee": "Mae", "task": "update the purchase tracker", "deadline": "next week", "priority": "Medium"}]}
+  },
+  {
+    "id": "sunday_deadline",
+    "transcript": "Meeting Date: 2027-03-21\nTeam: Events\n\nAiden: Beth, send the attendee reminder on Sunday. Low priority.",
+    "expected": {"meeting_date": "2027-03-21", "department": "Events", "action_items": [{"assignee": "Beth", "task": "send the attendee reminder", "deadline": "Sunday", "priority": "Low"}]}
+  },
+  {
+    "id": "multiword_assignee",
+    "transcript": "Meeting Date: 25 March 2027\nDepartment: Customer Operations\n\nCora: Mary Jane, review the cancellation reasons by Thursday. This is medium priority.",
+    "expected": {"meeting_date": "25 March 2027", "department": "Customer Operations", "action_items": [{"assignee": "Mary Jane", "task": "review the cancellation reasons", "deadline": "Thursday", "priority": "Medium"}]}
+  },
+  {
+    "id": "today_deadline",
+    "transcript": "Meeting Date: 2027-03-29\nDepartment: IT\n\nGeorge: Ana, restore access for the new contractor today. This is high priority.",
+    "expected": {"meeting_date": "2027-03-29", "department": "IT", "action_items": [{"assignee": "Ana", "task": "restore access for the new contractor", "deadline": "today", "priority": "High"}]}
+  },
+  {
+    "id": "no_headers_no_tasks",
+    "transcript": "Jordan: The training session was well received.\nCasey: Everyone agreed to keep the current schedule.",
+    "expected": {"meeting_date": "Not Mentioned", "department": "Not Mentioned", "action_items": []}
+  },
+  {
+    "id": "medium_priority_word_order",
+    "transcript": "Meeting Date: 1 April 2027\nDepartment: Communications\n\nLuca: Hana, prepare the executive newsletter by Tuesday. Please treat it as medium priority.",
+    "expected": {"meeting_date": "1 April 2027", "department": "Communications", "action_items": [{"assignee": "Hana", "task": "prepare the executive newsletter", "deadline": "Tuesday", "priority": "Medium"}]}
+  },
+  {
+    "id": "two_tasks_different_deadlines",
+    "transcript": "Meeting Date: 2027-04-05\nDepartment: Engineering\n\nSana: Eli, patch the login timeout by tomorrow. High priority.\nSana: Eli, create the release notes by Friday. Medium priority.",
+    "expected": {"meeting_date": "2027-04-05", "department": "Engineering", "action_items": [{"assignee": "Eli", "task": "patch the login timeout", "deadline": "tomorrow", "priority": "High"}, {"assignee": "Eli", "task": "create the release notes", "deadline": "Friday", "priority": "Medium"}]}
+  },
+  {
+    "id": "timestamp_same_line",
+    "transcript": "Meeting Date: 9 April 2027\nDepartment: Compliance\n\n[14:15] Farah: Luis, complete the policy attestation before Friday. This is high priority.\n[14:17] Luis: Confirmed.",
+    "expected": {"meeting_date": "9 April 2027", "department": "Compliance", "action_items": [{"assignee": "Luis", "task": "complete the policy attestation", "deadline": "Friday", "priority": "High"}]}
+  },
+  {
+    "id": "date_only_no_actions",
+    "transcript": "Meeting Date: 2027-04-12\n\nPavel: We closed the retrospective with no follow-up work.\nIvy: The notes are final.",
+    "expected": {"meeting_date": "2027-04-12", "department": "Not Mentioned", "action_items": []}
+  },
+  {
+    "id": "before_deadline_with_role",
+    "transcript": "Meeting Date: 16 April 2027\nDivision: Operations\n\nMonica (Coordinator): Rahul, submit the shift plan before Tuesday evening. This is medium priority.\nRahul: I will submit it.",
+    "expected": {"meeting_date": "16 April 2027", "department": "Operations", "action_items": [{"assignee": "Rahul", "task": "submit the shift plan", "deadline": "Tuesday evening", "priority": "Medium"}]}
+  }
+]

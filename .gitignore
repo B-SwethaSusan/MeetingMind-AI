@@ -1,0 +1,27 @@
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Node / Vite
+node_modules/
+dist/
+
+# Application runtime data
+backend/uploads/
+backend/outputs/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.claude/
+.DS_Store
+Thumbs.db
